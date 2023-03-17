@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "133440975470",
+    "project_id": "fir-miner-edac5",
+    "storage_bucket": "fir-miner-edac5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:133440975470:android:d7ae29be1fd627f204ec7f",
+        "android_client_info": {
+          "package_name": "com.example.firebase_miner"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "133440975470-i06261mpc6gkd71k6qk9rsm5imq4ffie.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.firebase_miner",
+            "certificate_hash": "b1b3c5c8ec117395eb17796674754409a8299ff7"
+          }
+        },
+        {
+          "client_id": "133440975470-fm1lkg7qtd2kbd1o86km3mpg19ekqq5p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCHIJG0jGs91oQOCPbCyEoCHRsUfeUm7zs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "133440975470-fm1lkg7qtd2kbd1o86km3mpg19ekqq5p.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
