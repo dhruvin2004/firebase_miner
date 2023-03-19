@@ -106,15 +106,7 @@ class _BookRegistrationState extends State<BookRegistration> {
                     ),
                     child: GestureDetector(
                       onTap: () {
-                        // showModalBottomSheet(
-                        //     context: context,
-                        //     isScrollControlled: true,
-                        //     builder: (context) {
-                        //       return EditSheet(
-                        //           index: index,
-                        //           notes: data['note'],
-                        //           title: data['title']);
-                        //     });
+
                       },
                       child: Container(
                         width: w,
