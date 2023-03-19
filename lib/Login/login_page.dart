@@ -7,7 +7,8 @@ import '../components/my_textfield.dart';
 import '../components/square_tile.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+  final VoidCallback showRegisterPage;
+  const LoginPage({Key? key,required this.showRegisterPage}) : super(key: key);
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -27,6 +28,22 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  Future<UserCredential> signInWithGoogle() async {
+    // Trigger the authentication flow
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+    // Obtain the auth details from the request
+    final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
+
+    // Create a new credential
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth?.accessToken,
+      idToken: googleAuth?.idToken,
+    );
+
+    // Once signed in, return the UserCredential
+    return await FirebaseAuth.instance.signInWithCredential(credential);
+  }
 
 
   @override
@@ -49,8 +66,6 @@ class _LoginPageState extends State<LoginPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const SizedBox(height: 50),
-
-// logo
                   Text(
                     "Sign In",
                     style: TextStyle(
@@ -138,12 +153,17 @@ class _LoginPageState extends State<LoginPage> {
                   const SizedBox(height: 50),
 
 // google + apple sign in buttons
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
+                  GestureDetector(
+                    onTap: (){
+                      signInWithGoogle();
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
 // google button
-                      SquareTile(imagePath: 'lib/images/google.png'),
-                    ],
+                        SquareTile(imagePath: 'lib/images/google.png'),
+                      ],
+                    ),
                   ),
 
                   const SizedBox(height: 50),
@@ -158,17 +178,14 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       const SizedBox(width: 4),
                       GestureDetector(
-                        onTap: () {
-                          Navigator.pushReplacementNamed(context, 'register');
-                        },
+                        onTap: widget.showRegisterPage,
                         child: const Text(
                           'Register now',
                           style: TextStyle(
                             color: Colors.blue,
                             fontWeight: FontWeight.bold,
                           ),
-                        ),
-                      ),
+                        ),),
                     ],
                   )
                 ],

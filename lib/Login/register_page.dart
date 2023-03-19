@@ -3,10 +3,11 @@ import 'package:flutter/material.dart';
 
 import '../components/my_button.dart';
 import '../components/my_textfield.dart';
-import '../components/square_tile.dart';
+
 
 class RegisterPage extends StatefulWidget {
-  const RegisterPage({Key? key}) : super(key: key);
+  final VoidCallback showLoginPage;
+  const RegisterPage({Key? key,required this.showLoginPage}) : super(key: key);
 
   @override
   State<RegisterPage> createState() => _RegisterPageState();
@@ -92,9 +93,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                     const SizedBox(width: 4),
                     GestureDetector(
-                      onTap: () {
-                        Navigator.pushReplacementNamed(context, 'login');
-                      },
+                      onTap: widget.showLoginPage,
                       child: const Text(
                         'Login now',
                         style: TextStyle(
