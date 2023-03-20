@@ -44,7 +44,7 @@ class _NotesPageState extends State<NotesPage> {
             ),
           ),
         ),
-        title: Text(
+        title: const Text(
           "Notes",
           style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         ),
@@ -106,9 +106,11 @@ class _NotesPageState extends State<NotesPage> {
                                   isScrollControlled: true,
                                   builder: (context) {
                                     return EditSheet(
-                                        index: index,
-                                        notes: data['note'],
-                                        title: data['title']);
+                                      index: index,
+                                      notes: data['note'],
+                                      title: data['title'],
+                                      convert: true,
+                                    );
                                   });
                             },
                             child: Container(
@@ -116,14 +118,16 @@ class _NotesPageState extends State<NotesPage> {
                               padding: EdgeInsets.all(10),
                               margin: EdgeInsets.only(bottom: 8),
                               decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(15),
-                                  color: Colors.white,
-                                  boxShadow: const [
-                                    BoxShadow(
-                                        color: Colors.black12,
-                                        offset: Offset(0, 4),
-                                        blurRadius: 30),
-                                  ]),
+                                borderRadius: BorderRadius.circular(15),
+                                color: Colors.white,
+                                boxShadow: const [
+                                  BoxShadow(
+                                    color: Colors.black12,
+                                    offset: Offset(0, 4),
+                                    blurRadius: 30,
+                                  ),
+                                ],
+                              ),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -158,7 +162,8 @@ class _NotesPageState extends State<NotesPage> {
               context: context,
               isScrollControlled: true,
               builder: (context) {
-                return BottomSheet();
+                return EditSheet(
+                    index: 1, notes: "", title: "", convert: false);
               });
         },
         child: Container(
@@ -179,126 +184,18 @@ class _NotesPageState extends State<NotesPage> {
   }
 }
 
-class BottomSheet extends StatefulWidget {
-  const BottomSheet({Key? key}) : super(key: key);
-
-  @override
-  State<BottomSheet> createState() => _BottomSheetState();
-}
-
-class _BottomSheetState extends State<BottomSheet> {
-  final _formKey = GlobalKey<FormState>();
-  TextEditingController title = TextEditingController();
-  TextEditingController notes = TextEditingController();
-
-  @override
-  Widget build(BuildContext context) {
-    return FractionallySizedBox(
-      heightFactor: 1,
-      child: Padding(
-        padding: const EdgeInsets.only(top: 40),
-        child: Form(
-          key: _formKey,
-          child: CupertinoPageScaffold(
-            navigationBar: CupertinoNavigationBar(
-              trailing: CupertinoButton(
-                padding: EdgeInsets.zero,
-                child: Text(
-                  "Done",
-                  style: TextStyle(
-                    color: CupertinoColors.activeBlue,
-                  ),
-                ),
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    DatabaseHelper.instance.insertData(title, notes);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                          content: Text('Notes Insert Sucssesfully')),
-                    );
-                    Navigator.pop(context);
-                  }
-                  title.clear();
-                  notes.clear();
-                },
-              ),
-            ),
-            child: SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Title",
-                      style: GoogleFonts.lato(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    TextField(
-                      controller: title,
-                      decoration: InputDecoration(
-                          enabledBorder: const OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.white),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.grey.shade400),
-                          ),
-                          fillColor: Colors.grey.shade200,
-                          filled: true,
-                          hintText: "Title",
-                          hintStyle: TextStyle(color: Colors.grey[500])),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      "Notes",
-                      style: GoogleFonts.lato(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    TextField(
-                      controller: notes,
-                      maxLines: null,
-                      decoration: InputDecoration(
-                          enabledBorder: const OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.white),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.grey.shade400),
-                          ),
-                          fillColor: Colors.grey.shade200,
-                          filled: true,
-                          hintText: "Notes",
-                          hintStyle: TextStyle(color: Colors.grey[500])),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
 class EditSheet extends StatefulWidget {
   int index;
   String title;
   String notes;
+  bool convert;
 
   EditSheet(
-      {Key? key, required this.index, required this.notes, required this.title})
+      {Key? key,
+      required this.index,
+      required this.notes,
+      required this.title,
+      required this.convert})
       : super(key: key);
 
   @override
@@ -315,8 +212,12 @@ class _EditSheetState extends State<EditSheet> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    title.value = TextEditingValue(text: widget.title);
-    notes.value = TextEditingValue(text: widget.notes);
+    (widget.convert == true)
+        ? title.value = TextEditingValue(text: widget.title)
+        : null;
+    (widget.convert == true)
+        ? notes.value = TextEditingValue(text: widget.notes)
+        : null;
   }
 
   @override
@@ -338,14 +239,27 @@ class _EditSheetState extends State<EditSheet> {
                   ),
                 ),
                 onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    DatabaseHelper.instance
-                        .updateData(widget.index, title.text, notes.text);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                          content: Text('Notes Update Sucssesfully')),
-                    );
-                    Navigator.pop(context);
+                  if (widget.convert == true) {
+                    if (_formKey.currentState!.validate()) {
+                      DatabaseHelper.instance
+                          .updateData(widget.index, title.text, notes.text);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                            content: Text('Notes Update Sucssesfully')),
+                      );
+                      Navigator.pop(context);
+                    }
+                  } else {
+                    if (_formKey.currentState!.validate()) {
+                      DatabaseHelper.instance.insertData(title, notes);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                            content: Text('Notes Insert Sucssesfully')),
+                      );
+                      Navigator.pop(context);
+                    }
+                    title.clear();
+                    notes.clear();
                   }
                 },
               ),
